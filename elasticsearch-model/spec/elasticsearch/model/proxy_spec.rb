@@ -6,7 +6,7 @@
 # not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#	http://www.apache.org/licenses/LICENSE-2.0
+#   http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing,
 # software distributed under the License is distributed on an
@@ -29,6 +29,10 @@ describe Elasticsearch::Model::Proxy do
 
       def bar
         'insta barr'
+      end
+
+      def keyword_method(foo: 'default value')
+        foo
       end
 
       def as_json(options)
@@ -98,7 +102,6 @@ describe Elasticsearch::Model::Proxy do
   end
 
   context 'when instances are cloned' do
-
     let!(:model) do
       DummyProxyModel.new
     end
@@ -121,4 +124,9 @@ describe Elasticsearch::Model::Proxy do
       expect(duplicate).to eq(duplicate_target)
     end
   end
+
+  it 'forwards keyword arguments to target methods' do
+    expect(DummyProxyModel.new.__elasticsearch__.keyword_method(foo: 'bar')).to eq('bar')
+  end
+
 end
